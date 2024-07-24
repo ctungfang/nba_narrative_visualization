@@ -6,6 +6,7 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
+    <h1>Hello!</h1>
     <div id="chart"></div>
     <script>
         // Load data
@@ -13,8 +14,8 @@
             // Parse and aggregate data
             let aggregatedData = d3.rollup(data, v => ({
                 Pts: d3.sum(v, d => +d.Pts),
-                `3pam`: d3.sum(v, d => +d['3pam']),
-                `3pm`: d3.sum(v, d => +d['3pm']),
+                '3pa': d3.sum(v, d => +d['3pa']),
+                '3pm': d3.sum(v, d => +d['3pm']),
                 Age: d3.mean(v, d => +d.Age)
             }), d => d.Season);
 
@@ -63,7 +64,7 @@
                 .attr("stroke-width", 1.5)
                 .attr("d", line);
 
-            // Repeat for 3pam, 3pm, and Age with different colors and y-scales if necessary
+            // Repeat for 3pa, 3pm, and Age with different colors and y-scales if necessary
         });
     </script>
 </body>
