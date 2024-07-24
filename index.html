@@ -65,6 +65,19 @@
                 .attr("d", line);
 
             // Repeat for 3pa, 3pm, and Age with different colors and y-scales if necessary
+
+            // 3pa Line generator
+            const aline = d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d['3pa']));
+
+            // Append 3pa line
+            svg.append("path")
+                .datum(aggregatedData)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 1.5)
+                .attr("d", aline);
         });
     </script>
 </body>
