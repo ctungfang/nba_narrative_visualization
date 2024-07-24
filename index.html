@@ -78,6 +78,32 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 1.5)
                 .attr("d", aline);
+
+            // 3pm Line generator
+            const mline = d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d['3pm']));
+
+            // Append 3pm line
+            svg.append("path")
+                .datum(aggregatedData)
+                .attr("fill", "none")
+                .attr("stroke", "brown")
+                .attr("stroke-width", 1.5)
+                .attr("d", mline);
+            
+            // Age Line generator
+            const Ageline = d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d['Age']));
+
+            // Append Age line
+            svg.append("path")
+                .datum(aggregatedData)
+                .attr("fill", "none")
+                .attr("stroke", "purple")
+                .attr("stroke-width", 1.5)
+                .attr("d", Ageline);
         });
     </script>
 </body>
