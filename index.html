@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <script src='https://d3js.org/d3.v5.min.js'></script>
-  <h1>Hello!</h1>
+  <head>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+  </head>
   <body onload='init()'>
-  <svg width=300 height=300>
+    <h1>Hello!</h1>
+    <svg width="300" height="300"></svg>
+    
     <script>
+      function init() {
         var margin = 50;
-  var width = 200;
-  var height = 200;
-  
-  var x = d3.scaleBand()
-    .domain([0, 1, 2, 3, 4, 5])
-    .range([0, width]);
-
-  var y = d3.scaleLinear()
-    .domain([0, d3.max(data)])
-    .range([height, 0]);
-
-  d3.select('svg')
-    .attr('width', width + 2 * margin)
-    .attr('height', height + 2 * margin)
-    .append('g')
-      .attr('transform', 'translate(' + margin + ',' + margin + ')')
-    .selectAll('rect')
-    .data(data)
-    .enter()
-    .append('rect')
-      .attr('x', function(d, i) { return x(i); })
-      .attr('y', function(d) { return y(d); })
-      .attr('width', x.bandwidth())
-      .attr('height', function(d) { return height - y(d); });
-
-d3.select('svg').append('g')
-  .attr('transform', 'translate(' + margin + ',' + margin + ')')
-  .call(d3.axisLeft(y));
-d3.select('svg').append('g')
-  .attr('transform', 'translate(' + margin + ','  + (height + margin) + ')')
-  .call(d3.axisBottom(x));
+        var width = 200;
+        var height = 200;
+        var data = [10, 20, 30, 40, 50, 60]; // Example data
+        
+        var x = d3.scaleBand()
+          .domain(data.map((d, i) => i))
+          .range([0, width])
+          .padding(0.1);
+      
+        var y = d3.scaleLinear()
+          .domain([0, d3.max(data)])
+          .range([height, 0]);
+      
+        var svg = d3.select('svg')
+          .attr('width', width + 2 * margin)
+          .attr('height', height + 2 * margin)
+          .append('g')
+            .attr('transform', 'translate(' + margin + ',' + margin + ')');
+        
+        svg.selectAll('rect')
+          .data(data)
+          .enter()
+          .append('rect')
+            .attr('x', function(d, i) { return x(i); })
+            .attr('y', function(d) { return y(d); })
+            .attr('width', x.bandwidth())
+            .attr('height', function(d) { return height - y(d); })
+            .attr('fill', 'steelblue');
+      
+        svg.append('g')
+          .call(d3.axisLeft(y));
+        
+        svg.append('g')
+          .attr('transform', 'translate(0,' + height + ')')
+          .call(d3.axisBottom(x));
+      }
     </script>
-</svg>
-</body>
+  </body>
 </html>
