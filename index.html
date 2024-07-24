@@ -41,7 +41,7 @@
 
             const y = d3.scaleLog()
                 .base(10)
-                .domain([0, d3.max(aggregatedData, d => d.Pts)])
+                .domain([10, d3.max(aggregatedData, d => d.Pts)])
                 .range([height, 0]);
 
             // Add axes
