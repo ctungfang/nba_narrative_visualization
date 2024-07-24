@@ -39,7 +39,8 @@
                 .domain(d3.extent(aggregatedData, d => new Date(d.season)))
                 .range([0, width]);
 
-            const y = d3.scaleLinear()
+            const y = d3.scaleLog()
+                .base(10)
                 .domain([0, d3.max(aggregatedData, d => d.Pts)])
                 .range([height, 0]);
 
