@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>NBA Stats Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 5px;
+            font: 12px sans-serif;
+            background: blue;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Hello!</h1>
@@ -51,18 +62,38 @@
             svg.append("g")
                 .call(d3.axisLeft(y));
 
-            // Line generator
+
+            // Add tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+
+            // Pts Line generator
             const line = d3.line()
                 .x(d => x(new Date(d.season)))
                 .y(d => y(d.Pts));
 
-            // Append line
+            // Append Pts line
             svg.append("path")
                 .datum(aggregatedData)
                 .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 1.5)
-                .attr("d", line);
+                .attr("stroke", "gray")
+                .attr("stroke-width", 2)
+                .attr("d", line)
+                .on("mouseover", function(event, d) {
+                    tooltip.transition().duration(200).style("opacity", .9);
+                    tooltip.html(`Points: ${d.Pts}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.transition().duration(500).style("opacity", 0);
+                });
 
             // Repeat for 3pa, 3pm, and Age with different colors and y-scales if necessary
 
@@ -75,8 +106,8 @@
             svg.append("path")
                 .datum(aggregatedData)
                 .attr("fill", "none")
-                .attr("stroke", "black")
-                .attr("stroke-width", 1.5)
+                .attr("stroke", "gray")
+                .attr("stroke-width", 2)
                 .attr("d", aline);
 
             // 3pm Line generator
@@ -88,22 +119,23 @@
             svg.append("path")
                 .datum(aggregatedData)
                 .attr("fill", "none")
-                .attr("stroke", "brown")
-                .attr("stroke-width", 1.5)
+                .attr("stroke", "gray")
+                .attr("stroke-width", 2)
                 .attr("d", mline);
             
-            // Age Line generator
-            const Ageline = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d['Age']));
+            // // Age Line generator
+            // const Ageline = d3.line()
+            //     .x(d => x(new Date(d.season)))
+            //     .y(d => y(d['Age']));
 
-            // Append Age line
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("fill", "none")
-                .attr("stroke", "purple")
-                .attr("stroke-width", 1.5)
-                .attr("d", Ageline);
+            // // Append Age line
+            // svg.append("path")
+            //     .datum(aggregatedData)
+            //     .attr("fill", "none")
+            //     .attr("stroke", "purple")
+            //     .attr("stroke-width", 1.5)
+            //     .attr("d", Ageline);
+
         });
     </script>
 </body>
