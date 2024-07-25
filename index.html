@@ -124,6 +124,32 @@
                     d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
+
+            // 3pm Line generator
+            const threeMakeLine = d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d['3pm']));
+
+            // Append Pts line and mouseover tooltip
+            svg.append("path")
+                .datum(aggregatedData)
+                .attr("class", "line")
+                .attr("d", threeMakeLine)
+                .on("mouseover", function(event) {
+                    d3.select(this).style("stroke", "green"); // Change line color on mouseover
+                    tooltip.transition().duration(200).style("opacity", .9);
+                    tooltip.html('3PM in a Season')
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
+                    tooltip.transition().duration(500).style("opacity", 0);
+                });
         });
     </script>
 </body>
