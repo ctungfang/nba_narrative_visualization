@@ -161,13 +161,11 @@
             };
 
             // Handle click outside the lines to reset color
-            // d3.select("body").on("click", function() {
-            //     if (activeLine) {
-            //         d3.select(activeLine).style("stroke", "lightgray");
-            //         d3.select(this).style("stroke-width", "2");
-            //         activeLine = null;
-            //     }
-            // }); 
+            d3.select("body").on("click", function() {
+                activeLine = null;
+                d3.select(activeLine).style("stroke", "lightgray");
+                d3.select(this).style("stroke-width", "2");
+            }); 
 
             // Create lines
             createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
