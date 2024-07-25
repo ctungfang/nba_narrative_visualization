@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
+    <h1>How NBA Stats Evolves Throughout the Years:</h1>
     <p>Click on the line to investigate each stats' trend</p>
     <p>In the NBA pre-Steph Curry, there was a much lower emphasis on 3-point shooting</p>
     <div id="chart"></div>
@@ -91,7 +91,7 @@
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
-            
+
             let activeLine = null;
 
             // 3pa Line generator
@@ -120,7 +120,6 @@
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
 
-            
             // Create line for Age
             const lineGenerator = function(yAccessor) {
                 return d3.line()
@@ -152,36 +151,36 @@
                         }
                         tooltip.transition().duration(500).style("opacity", 0);
                     })
-                    // .on("click", function() {
-                    //     // if (activeLine) {
-                    //     //     d3.select(activeLine).style("stroke", "lightgray");    
-                    //     // } 
-                    //     activeLine = this;
-                    //     d3.select(this).style("stroke", "red");
-                    //     d3.select(this).style("stroke-width", "3");
-                    // });
+                    .on("click", function() {
+                        if (activeLine) {
+                            d3.select(activeLine).style("stroke", "lightgray");    
+                        } 
+                        activeLine = this;
+                        d3.select(this).style("stroke", "red");
+                        d3.select(this).style("stroke-width", "3");
+                    });
             };
 
             // Handle click outside the lines to reset color
             d3.select("body").on("click", function() {
-                activeLine = null;
-                d3.select(activeLine).style("stroke", "lightgray");
-                d3.select(this).style("stroke-width", "2");
-            }); 
+                if (activeLine) {
+                    d3.select(activeLine).style("stroke", "lightgray");
+                    activeLine = null;
+                }
+            });
 
             // Create lines
             createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
             createLine(aggregatedData, d => y(d['3p%']), "3P% in a Season");
-            // createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
             createLine(aggregatedData, d => y(d['3pm']), "3PM in a Season");
-            createLine(aggregatedData, d => y(d['Ast']), "Ast in a Season");
-            createLine(aggregatedData, d => y(d['Blk']), "Blk in a Season");
+            createLine(aggregatedData, d => y(d.Ast), "Ast in a Season");
+            createLine(aggregatedData, d => y(d.Blk), "Blk in a Season");
             createLine(aggregatedData, d => y(d['Fg%']), "FG% in a Season");
             createLine(aggregatedData, d => y(d['Fga']), "FGA in a Season");
             createLine(aggregatedData, d => y(d['Fgm']), "FGM in a Season");
-            createLine(aggregatedData, d => y(d['Ft%']), "Ft% in a Season");
-            createLine(aggregatedData, d => y(d['Fta']), "Fta in a Season");
-            createLine(aggregatedData, d => y(d['Ftm']), "Ftm in a Season");
+            createLine(aggregatedData, d => y(d['Ft%']), "FT% in a Season");
+            createLine(aggregatedData, d => y(d['Fta']), "FTA in a Season");
+            createLine(aggregatedData, d => y(d['Ftm']), "FTM in a Season");
             createLine(aggregatedData, d => y(d['Reb']), "Reb in a Season");
             createLine(aggregatedData, d => y(d['Stl']), "Stl in a Season");
             createLine(aggregatedData, d => y(d['Tov']), "Tov in a Season");
@@ -189,11 +188,14 @@
             // Add annotations
             const annotations = [
                 {
-                    note: { label: "Lost First 3 Months Due to Lockout", title: "1999 Season" },
-                    x: x(new Date(aggregatedData.find(d => d['Season'] === '1999').season)),
-                    y: y(d3.max(aggregatedData, d => d['Pts'])),
-                    dy: 137,
-                    dx: 162
+                    note: { 
+                        label: "Lost First 3 Months Due to Lockout", 
+                        title: "1999 Season" 
+                    },
+                    x: x(new Date('1999')),
+                    y: y(d3.max(aggregatedData, d => d.Pts)),
+                    dy: -30,
+                    dx: 30
                 }
             ];
 
