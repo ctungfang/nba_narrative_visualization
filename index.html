@@ -85,11 +85,11 @@
 
             // Helper function to create lines with event listeners
             const createLine = (data, yAccessor, label) => {
-                svg.append("path")
+                const line = svg.append("path")
                     .datum(data)
                     .attr("class", "line")
                     .attr("d", lineGenerator(data, yAccessor))
-                    .on("mouseover", function(event) {
+                    .on("mouseover", function(event, d) {
                         d3.select(this).attr("stroke", "green");
                         tooltip.transition().duration(200).style("opacity", .9);
                         tooltip.html(label)
@@ -109,7 +109,16 @@
                 svg.append("path")
                     .datum(data)
                     .attr("class", "buffer-line")
-                    .attr("d", lineGenerator(data, yAccessor));
+                    .attr("d", lineGenerator(data, yAccessor))
+                    .on("mouseover", function(event, d) {
+                        line.dispatch("mouseover", { detail: d, bubbles: true });
+                    })
+                    .on("mousemove", function(event, d) {
+                        line.dispatch("mousemove", { detail: d, bubbles: true });
+                    })
+                    .on("mouseout", function(event, d) {
+                        line.dispatch("mouseout", { detail: d, bubbles: true });
+                    });
             };
 
             // Create lines for Pts, 3pa, 3pm, and Age
