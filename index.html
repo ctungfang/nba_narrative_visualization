@@ -95,35 +95,8 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
+            let activeLine = null;
 
-            // 3pa Line generator
-            const threeAttemptLine = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d['3pa']));
-
-            // Append 3Pa line and mouseover tooltip
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("class", "threeAttemptLine")
-                .attr("d", threeAttemptLine)
-                .on("mouseover", function(event) {
-                    d3.select(this).style("stroke", "green"); // Change line color on mouseover
-                    tooltip.transition().duration(200).style("opacity", .9);
-                    tooltip.html('3PA in a Season')
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mousemove", function(event) {
-                    tooltip.style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function() {
-                    d3.select(this).style("stroke", "rgb(186, 10, 10)"); // Revert line color on mouseout
-                    tooltip.transition().duration(500).style("opacity", 0);
-                });
-
-            
-            // Create line for Age
             const lineGenerator = function(yAccessor) {
                 return d3.line()
                     .x(d => x(new Date(d.season)))
@@ -136,7 +109,9 @@
                     .attr("class", "line")
                     .attr("d", lineGenerator(yAccessor))
                     .on("mouseover", function(event) {
-                        d3.select(this).style("stroke", "green");
+                        if (activeLine !== this) {
+                            d3.select(this).style("stroke", "green");
+                        }
                         tooltip.transition().duration(200).style("opacity", 0.9);
                         tooltip.html(label)
                             .style("left", (event.pageX + 5) + "px")
@@ -147,48 +122,64 @@
                             .style("top", (event.pageY - 28) + "px");
                     })
                     .on("mouseout", function() {
-                        d3.select(this).style("stroke", "lightgray");
+                        if (activeLine !== this) {
+                            d3.select(this).style("stroke", "lightgray");
+                        }
                         tooltip.transition().duration(500).style("opacity", 0);
                     })
                     .on("click", function() {
+                        if (activeLine) {
+                            d3.select(activeLine).style("stroke", "lightgray");
+                        }
+                        activeLine = this;
                         d3.select(this).style("stroke", "red");
                         d3.select(this).style("stroke-width", "3");
                     });
 
                 // Add buffer around the line for detecting mouse proximity
-                // svg.append("path")
-                //     .datum(data)
-                //     .attr("class", "buffer-line")
-                //     .attr("d", lineGenerator(yAccessor))
-                //     .on("mouseover", function(event) {
-                //         line.dispatch("mouseover", { bubbles: true });
-                //     })
-                //     .on("mousemove", function(event) {
-                //         line.dispatch("mousemove", { bubbles: true });
-                //     })
-                //     .on("mouseout", function(event) {
-                //         line.dispatch("mouseout", { bubbles: true });
-                //     });
+                svg.append("path")
+                    .datum(data)
+                    .attr("class", "buffer-line")
+                    .attr("d", lineGenerator(yAccessor))
+                    .on("mouseover", function(event) {
+                        line.dispatch("mouseover", { bubbles: true });
+                    })
+                    .on("mousemove", function(event) {
+                        line.dispatch("mousemove", { bubbles: true });
+                    })
+                    .on("mouseout", function(event) {
+                        line.dispatch("mouseout", { bubbles: true });
+                    })
+                    .on("click", function(event) {
+                        line.dispatch("click", { bubbles: true });
+                        event.stopPropagation();
+                    });
             };
+
+            // Handle click outside the lines to reset color
+            d3.select("body").on("click", function() {
+                if (activeLine) {
+                    d3.select(activeLine).style("stroke", "lightgray");
+                    activeLine = null;
+                }
+            });
 
             // Create lines
             createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
             createLine(aggregatedData, d => y(d['3p%']), "3P% in a Season");
-            // createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
+            createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
             createLine(aggregatedData, d => y(d['3pm']), "3PM in a Season");
-            createLine(aggregatedData, d => y(d['Ast']), "Ast in a Season");
-            createLine(aggregatedData, d => y(d['Blk']), "Blk in a Season");
+            createLine(aggregatedData, d => y(d.Ast), "Ast in a Season");
+            createLine(aggregatedData, d => y(d.Blk), "Blk in a Season");
             createLine(aggregatedData, d => y(d['Fg%']), "FG% in a Season");
             createLine(aggregatedData, d => y(d['Fga']), "FGA in a Season");
             createLine(aggregatedData, d => y(d['Fgm']), "FGM in a Season");
-            createLine(aggregatedData, d => y(d['Ft%']), "Ft% in a Season");
-            createLine(aggregatedData, d => y(d['Fta']), "Fta in a Season");
-            createLine(aggregatedData, d => y(d['Ftm']), "Ftm in a Season");
-            createLine(aggregatedData, d => y(d['Reb']), "Reb in a Season");
-            createLine(aggregatedData, d => y(d['Stl']), "Stl in a Season");
-            createLine(aggregatedData, d => y(d['Tov']), "Tov in a Season");
-
-            
+            createLine(aggregatedData, d => y(d['Ft%']), "FT% in a Season");
+            createLine(aggregatedData, d => y(d['Fta']), "FTA in a Season");
+            createLine(aggregatedData, d => y(d['Ftm']), "FTM in a Season");
+            createLine(aggregatedData, d => y(d.Reb), "Reb in a Season");
+            createLine(aggregatedData, d => y(d.Stl), "Stl in a Season");
+            createLine(aggregatedData, d => y(d.Tov), "Tov in a Season");
         });
     </script>
 </body>
