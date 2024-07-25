@@ -132,7 +132,7 @@
                     .attr("class", "line")
                     .attr("d", lineGenerator(yAccessor))
                     .on("mouseover", function(event) {
-                        if (activeLine != this) { // if null turn green
+                        if (activeLine !== this) { // if null turn green
                             d3.select(this).style("stroke", "green");    
                         }
                         tooltip.transition().duration(200).style("opacity", 0.9);
@@ -145,7 +145,7 @@
                             .style("top", (event.pageY - 28) + "px");
                     })
                     .on("mouseout", function() {
-                        if (activeLine != this) {
+                        if (activeLine !== this) {
                             d3.select(this).style("stroke", "lightgray");
                         }
                         tooltip.transition().duration(500).style("opacity", 0);
@@ -155,7 +155,7 @@
                             d3.select(activeLine).style("stroke", "lightgray");    
                         } else {
                             activeLine = this;
-                            d3.select(activeLine).style("stroke", "red");
+                            d3.select(this).style("stroke", "red");
                             d3.select(this).style("stroke-width", "3");
                         }
                     });
