@@ -132,7 +132,7 @@
                     .attr("class", "line")
                     .attr("d", lineGenerator(yAccessor))
                     .on("mouseover", function(event) {
-                        if (activeLine != this) {
+                        if (activeLine != this) { // if null turn green
                             d3.select(this).style("stroke", "green");    
                         }
                         tooltip.transition().duration(200).style("opacity", 0.9);
