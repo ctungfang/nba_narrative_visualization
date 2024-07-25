@@ -13,6 +13,7 @@
             background: lightsteelblue;
             border-radius: 5px;
             pointer-events: none;
+            opacity: 0;
         }
         .buffer-line {
             fill: none;
@@ -37,7 +38,7 @@
                 Pts: d3.sum(v, d => +d.Pts),
                 '3pa': d3.sum(v, d => +d['3pa']),
                 '3pm': d3.sum(v, d => +d['3pm']),
-                Age: d3.sum(v, d => +d.Age)
+                Age: d3.mean(v, d => +d.Age)
             }), d => d.Season);
 
             aggregatedData = Array.from(aggregatedData, ([season, stats]) => ({ season, ...stats }));
@@ -72,12 +73,10 @@
             svg.append("g")
                 .call(d3.axisLeft(y));
 
-
             // Add tooltip
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
-
 
             // Pts Line generator
             const line = d3.line()
@@ -91,70 +90,29 @@
                 .attr("fill", "none")
                 .attr("d", line)
                 .on("mouseover", function(event, d) {
-                    d3.select(this).attr("stroke", "green"); // change color on mouseover
+                    d3.select(this).attr("stroke", "red"); // Change line color on mouseover
                     tooltip.transition().duration(200).style("opacity", .9);
-                    tooltip.html('Total Pts Scored in a Season')
+                    tooltip.html('Total Points Scored in a Season')
                         .style("left", (event.pageX + 5) + "px")
                         .style("top", (event.pageY - 28) + "px");
-                
                 })
                 .on("mousemove", function(event) {
                     tooltip.style("left", (event.pageX + 5) + "px")
                         .style("top", (event.pageY - 28) + "px");
                 })
                 .on("mouseout", function() {
-                    d3.select(this).attr("stroke", "lightgray");
+                    d3.select(this).attr("stroke", "lightgray"); // Revert line color on mouseout
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
 
-
-            // Add buffer around the line for detecting mouse proximity
+            // Add buffer path for detecting mouse proximity
             svg.append("path")
                 .datum(aggregatedData)
                 .attr("class", "buffer-line")
-                .attr("d", line)
+                .attr("d", line);
 
-            // Repeat for 3pa, 3pm, and Age with different colors and y-scales if necessary
-
-            // 3pa Line generator
-            const aline = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d['3pa']));
-
-            // Append 3pa line
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("fill", "none")
-                .attr("stroke", "gray")
-                .attr("stroke-width", 2)
-                .attr("d", aline);
-
-            // 3pm Line generator
-            const mline = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d['3pm']));
-
-            // Append 3pm line
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("fill", "none")
-                .attr("stroke", "gray")
-                .attr("stroke-width", 2)
-                .attr("d", mline);
-            
-            // // Age Line generator
-            // const Ageline = d3.line()
-            //     .x(d => x(new Date(d.season)))
-            //     .y(d => y(d['Age']));
-
-            // // Append Age line
-            // svg.append("path")
-            //     .datum(aggregatedData)
-            //     .attr("fill", "none")
-            //     .attr("stroke", "purple")
-            //     .attr("stroke-width", 1.5)
-            //     .attr("d", Ageline);
-
+            // Repeat for 3pa, 3pm, and Age if necessary
+            // ...
         });
     </script>
 </body>
