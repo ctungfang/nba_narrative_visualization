@@ -19,6 +19,14 @@
             stroke: transparent;
             stroke-width: 20px; /* Adjust to the desired buffer width */
         }
+        .line {
+            fill: none;
+            stroke: lightgray;
+            stroke-width: 2;
+        }
+        .line:hover {
+            stroke: lightgreen; /* Change to desired hover color */
+        }
     </style>
 </head>
 <body>
@@ -82,10 +90,25 @@
             // Append Pts line and mouseover tooltip
             svg.append("path")
                 .datum(aggregatedData)
+                .attr("class", "line")
                 .attr("fill", "none")
-                .attr("stroke", "gray")
-                .attr("stroke-width", 2)
-                .attr("d", line);
+                .attr("d", line)
+                .on("mouseover", function(event) {
+                    d3.select(this).attr("stroke", "lightgreen");
+                    tooltip.transition().duration(200).style("opacity", .9);
+                    tooltip.html('Total Pts Scored in a Season')
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).attr("stroke", "lightgray");
+                    tooltip.transition().duration(500).style("opacity", 0);
+                });
 
 
             // Add buffer around the line for detecting mouse proximity
