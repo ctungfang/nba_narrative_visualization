@@ -34,7 +34,7 @@
 </head>
 <body>
     <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
-    
+    <h2>Click on the line to investigate each stats' trend</h2>
     <div id="chart"></div>
     <script>
         // Load data
@@ -118,7 +118,7 @@
                         .style("top", (event.pageY - 28) + "px");
                 })
                 .on("mouseout", function() {
-                    d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
+                    d3.select(this).style("stroke", "rgb(186, 10, 10)"); // Revert line color on mouseout
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
 
@@ -149,6 +149,10 @@
                     .on("mouseout", function() {
                         d3.select(this).style("stroke", "lightgray");
                         tooltip.transition().duration(500).style("opacity", 0);
+                    })
+                    .on("click", function() {
+                        d3.select(this).style("stroke", "red");
+
                     });
 
                 // Add buffer around the line for detecting mouse proximity
