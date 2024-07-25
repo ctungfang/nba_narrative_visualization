@@ -155,7 +155,7 @@
                             d3.select(activeLine).style("stroke", "lightgray");    
                         } else {
                             activeLine = this;
-                            d3.select(this).style("stroke", "red");
+                            d3.select(activeLine).style("stroke", "red");
                             d3.select(this).style("stroke-width", "3");
                         }
                     });
