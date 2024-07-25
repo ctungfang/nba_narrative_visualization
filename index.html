@@ -28,7 +28,8 @@
     </style>
 </head>
 <body>
-    <h1>Hello!</h1>
+    <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
+    
     <div id="chart"></div>
     <script>
         // Load data
@@ -89,83 +90,34 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
-            // // Pts Line generator
-            // const Ptsline = d3.line()
-            //     .x(d => x(new Date(d.season)))
-            //     .y(d => y(d.Pts));
 
-            // // Append Pts line and mouseover tooltip
-            // svg.append("path")
-            //     .datum(aggregatedData)
-            //     .attr("class", "line")
-            //     .attr("d", Ptsline)
-            //     .on("mouseover", function(event) {
-            //         d3.select(this).style("stroke", "green"); // Change line color on mouseover
-            //         tooltip.transition().duration(200).style("opacity", .9);
-            //         tooltip.html('Total Points Scored in a Season')
-            //             .style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mousemove", function(event) {
-            //         tooltip.style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mouseout", function() {
-            //         d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
-            //         tooltip.transition().duration(500).style("opacity", 0);
-            //     });
+            // 3pa Line generator
+            const threeAttemptLine = d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d['3pa']));
 
-            // // 3pa Line generator
-            // const threeAttemptLine = d3.line()
-            //     .x(d => x(new Date(d.season)))
-            //     .y(d => y(d['3pa']));
+            // Append Pts line and mouseover tooltip
+            svg.append("path")
+                .datum(aggregatedData)
+                .attr("stroke", "red")
+                .attr("stroke-width", 4)
+                .attr("d", threeAttemptLine)
+                .on("mouseover", function(event) {
+                    d3.select(this).style("stroke", "green"); // Change line color on mouseover
+                    tooltip.transition().duration(200).style("opacity", .9);
+                    tooltip.html('3PA in a Season')
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
+                    tooltip.transition().duration(500).style("opacity", 0);
+                });
 
-            // // Append Pts line and mouseover tooltip
-            // svg.append("path")
-            //     .datum(aggregatedData)
-            //     .attr("class", "line")
-            //     .attr("d", threeAttemptLine)
-            //     .on("mouseover", function(event) {
-            //         d3.select(this).style("stroke", "green"); // Change line color on mouseover
-            //         tooltip.transition().duration(200).style("opacity", .9);
-            //         tooltip.html('3PA in a Season')
-            //             .style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mousemove", function(event) {
-            //         tooltip.style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mouseout", function() {
-            //         d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
-            //         tooltip.transition().duration(500).style("opacity", 0);
-            //     });
-
-            // // 3pm Line generator
-            // const threeMakeLine = d3.line()
-            //     .x(d => x(new Date(d.season)))
-            //     .y(d => y(d['3pm']));
-
-            // // Append Pts line and mouseover tooltip
-            // svg.append("path")
-            //     .datum(aggregatedData)
-            //     .attr("class", "line")
-            //     .attr("d", threeMakeLine)
-            //     .on("mouseover", function(event) {
-            //         d3.select(this).style("stroke", "green"); // Change line color on mouseover
-            //         tooltip.transition().duration(200).style("opacity", .9);
-            //         tooltip.html('3PM in a Season')
-            //             .style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mousemove", function(event) {
-            //         tooltip.style("left", (event.pageX + 5) + "px")
-            //             .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mouseout", function() {
-            //         d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
-            //         tooltip.transition().duration(500).style("opacity", 0);
-            //     });
             
             // Create line for Age
             const lineGenerator = function(yAccessor) {
@@ -214,7 +166,7 @@
             // Create lines
             createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
             createLine(aggregatedData, d => y(d['3p%']), "3P% in a Season");
-            createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
+            // createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
             createLine(aggregatedData, d => y(d['3pm']), "3PM in a Season");
             createLine(aggregatedData, d => y(d['Ast']), "Ast in a Season");
             createLine(aggregatedData, d => y(d['Blk']), "Blk in a Season");
