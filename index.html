@@ -20,6 +20,11 @@
             stroke: lightgray;
             stroke-width: 2;
         }
+        .buffer-line {
+            fill: none;
+            stroke: transparent;
+            stroke-width: 20px; /* Adjust to the desired buffer width */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +77,49 @@
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
+
+            const lineGenerator = function(data, yAccessor) {
+                return d3.line()
+                .x(d => x(new Date(d.season)))
+                .y(d => y(d.Pts));
+            };
+
+            const createLine = function(data, yAccessor, label) {
+                return line = svg.append("path")
+                    .datum(data)
+                    .attr("class", "line")
+                    .attr("d", lineGenerator(data, yAccessor))
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).style("stroke", "green");
+                        tooltip.transition().duration(200).style("opacity", 0.9);
+                        tooltip.html(label)
+                            .style("left", (event.pageX + 5) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mousemove", function(event) {
+                        tooltip.style("left", (event.pageX + 5) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function() {
+                        d3.select(this).attr("stroke", "lightgray");
+                        tooltip.transition().duration(500).style("opacity", 0);
+                    });
+                    
+                // Add buffer around the line for detecting mouse proximity
+                svg.append("path")
+                    .datum(data)
+                    .attr("class", "buffer-line")
+                    .attr("d", lineGenerator(data, yAccessor))
+                    .on("mouseover", function(event, d) {
+                        line.dispatch("mouseover", {detail: d, bubbles: true});
+                    })
+                    .on("mousemove", function(event, d) {
+                        line.dispatch("mousemove", {detail: d, bubbles: true});
+                    })
+                    .on("mouseout", function(event, d) {
+                        line.dispatch("mouseout", {detail: d, bubbles: true});
+                    });
+            };
 
             // Pts Line generator
             const Ptsline = d3.line()
@@ -150,6 +198,9 @@
                     d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
+            
+            // Create line for Age
+            createLine(aggregatedData, d => d['Age'], "Average Player Age");
         });
     </script>
 </body>
