@@ -29,7 +29,7 @@
 </head>
 <body>
     <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
-    <h2>Click on the line to investigate each stats' trend</h2>
+    <p>Click on the line to investigate each stats' trend</p>
     <div id="chart"></div>
     <script>
         // Load data
@@ -153,10 +153,11 @@
                     .on("click", function() {
                         if (activeLine) {
                             d3.select(activeLine).style("stroke", "lightgray");    
+                        } else {
+                            activeLine = this;
+                            d3.select(this).style("stroke", "red");
+                            d3.select(this).style("stroke-width", "3");
                         }
-                        activeLine = this;
-                        d3.select(this).style("stroke", "red");
-                        d3.select(this).style("stroke-width", "3");
                     });
             };
 
