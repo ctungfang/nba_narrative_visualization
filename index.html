@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>NBA Stats Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3-annotation.v2.min.js"></script>
     <style>
         .tooltip {
             position: absolute;
@@ -150,14 +151,14 @@
                         }
                         tooltip.transition().duration(500).style("opacity", 0);
                     })
-                    .on("click", function() {
-                        // if (activeLine) {
-                        //     d3.select(activeLine).style("stroke", "lightgray");    
-                        // } 
-                        activeLine = this;
-                        d3.select(this).style("stroke", "red");
-                        d3.select(this).style("stroke-width", "3");
-                    });
+                    // .on("click", function() {
+                    //     // if (activeLine) {
+                    //     //     d3.select(activeLine).style("stroke", "lightgray");    
+                    //     // } 
+                    //     activeLine = this;
+                    //     d3.select(this).style("stroke", "red");
+                    //     d3.select(this).style("stroke-width", "3");
+                    // });
             };
 
             // Handle click outside the lines to reset color
@@ -184,7 +185,23 @@
             createLine(aggregatedData, d => y(d['Stl']), "Stl in a Season");
             createLine(aggregatedData, d => y(d['Tov']), "Tov in a Season");
 
-            
+            // Add annotations
+            const annotations = [
+                {
+                    note: { label: "Highest 3PA", title: "Season with Most 3PA" },
+                    x: x(new Date(aggregatedData.find(d => d['3pa'] === d3.max(aggregatedData, d => d['3pa'])).season)),
+                    y: y(d3.max(aggregatedData, d => d['3pa'])),
+                    dy: -30,
+                    dx: 30
+                }
+            ];
+
+            const makeAnnotations = d3.annotation()
+                .annotations(annotations);
+
+            svg.append("g")
+                .attr("class", "annotation-group")
+                .call(makeAnnotations);
         });
     </script>
 </body>
