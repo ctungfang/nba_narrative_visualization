@@ -31,6 +31,7 @@
 <body>
     <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
     <p>Click on the line to investigate each stats' trend</p>
+    <p>In the NBA pre-Steph Curry, there was a much lower emphasis on 3-point shooting</p>
     <div id="chart"></div>
     <script>
         // Load data
@@ -188,11 +189,11 @@
             // Add annotations
             const annotations = [
                 {
-                    note: { label: "Highest 3PA", title: "Season with Most 3PA" },
-                    x: x(new Date(aggregatedData.find(d => d['3pa'] === d3.max(aggregatedData, d => d['3pa'])).season)),
-                    y: y(d3.max(aggregatedData, d => d['3pa'])),
-                    dy: -30,
-                    dx: 30
+                    note: { label: "Lost First 3 Months Due to Lockout", title: "1999 Season" },
+                    x: x(new Date(aggregatedData.find(d => d['Season'] === '1999').season)),
+                    y: y(d3.max(aggregatedData, d => d['Pts'])),
+                    dy: 137,
+                    dx: 162
                 }
             ];
 
