@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>NBA Stats Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://d3js.org/d3-annotation.v2.min.js"></script>
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
     <style>
         .tooltip {
             position: absolute;
@@ -26,10 +26,14 @@
             stroke: rgb(186, 10, 10);
             stroke-width: 4;
         }
+        .circle {
+            fill:rgb(186, 10, 10);
+            stroke: none;
+        }
     </style>
 </head>
 <body>
-    <h1>How NBA Stats Evolves Thoroughout the Years:</h1>
+    <h1>How NBA Stats Evolves Throughout the Years:</h1>
     <p>Click on the line to investigate each stats' trend</p>
     <p>In the NBA pre-Steph Curry, there was a much lower emphasis on 3-point shooting</p>
     <div id="chart"></div>
@@ -119,9 +123,19 @@
                     d3.select(this).style("stroke", "rgb(186, 10, 10)"); // Revert line color on mouseout
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
-
             
-            // Create line for Age
+            // Create a circle at 2010 vs 3PA
+            const data2010 = aggregatedData.find(d => d.season === '2010');
+            if (data2010) {
+                // Append a circle for the data point in 2010
+                svg.append("circle")
+                    .attr("class", "circle")
+                    .attr("cx", x(new Date('2010'))) // x coordinate for the circle
+                    .attr("cy", y(data2010['3pa'])) // y coordinate for the circle
+                    .attr("r", 5); // Radius of the circle (adjust size as needed)
+            }
+            
+            // Create line according to yAccessor
             const lineGenerator = function(yAccessor) {
                 return d3.line()
                     .x(d => x(new Date(d.season)))
@@ -151,7 +165,7 @@
                             d3.select(this).style("stroke", "lightgray");
                         }
                         tooltip.transition().duration(500).style("opacity", 0);
-                    });
+                    })
             };
 
             // Handle click outside the lines to reset color
@@ -164,7 +178,6 @@
             // Create lines
             createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
             createLine(aggregatedData, d => y(d['3p%']), "3P% in a Season");
-            // createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
             createLine(aggregatedData, d => y(d['3pm']), "3PM in a Season");
             createLine(aggregatedData, d => y(d['Ast']), "Ast in a Season");
             createLine(aggregatedData, d => y(d['Blk']), "Blk in a Season");
@@ -178,26 +191,58 @@
             createLine(aggregatedData, d => y(d['Stl']), "Stl in a Season");
             createLine(aggregatedData, d => y(d['Tov']), "Tov in a Season");
 
-            // Add annotations
-            const annotations = [
+            // Add annotations for 1999 Lockout season
+            const lockout1999Annotations = [
                 {
-                    note: {
-                        label: "Lost First 3 Months Due to Lockout",
-                        title: "1999 Season",
-                        wrap: 200,  // Wrap text after 200px
-                        padding: 10   // Note padding
-                    },
+                    note: { label: "Lost 3 Months Due to Lockout", bePadding: 20, title: "1999 Season" },
                     x: x(new Date('1999')),
-                    y: y(100),
-                    dy: -100,
-                    dx: 100
+                    y: 200,
+                    dy: 50,
+                    dx: 50,
+                    type: d3.annotationCalloutElbow
                 }
             ];
 
-            const makeAnnotations = d3.annotation()
-                .type(d3.annotationLabel)
-                .annotations(annotations);
+            // Add annotations for 2012 Lockout season
+            const lockout2012Annotations = [
+                {
+                    note: { label: "Shortened to 66 Games Due to Lockout", bePadding: 20, title: "2012 Season" },
+                    x: x(new Date('2012')),
+                    y: 140,
+                    dy: 50,
+                    dx: 50,
+                    type: d3.annotationCalloutElbow
+                }
+            ];
 
+            // Add annotations for COVID-19
+            const covidAnnotations = [{
+                note: {
+                    label: "NBA suspends season due to coronavirus outbreak",
+                    title: "COVID-19"
+                },
+                x: x(new Date('2020')),
+                y: 40,
+                dy: 37,
+                dx: 62,
+                subject: {
+                    radius: 50,
+                    radiusPadding: 5
+                },
+                type: d3.annotationCalloutCircle
+            }];
+
+            // Combine all annotations into a single array
+            const allAnnotations = lockout1999Annotations
+                .concat(lockout2012Annotations)
+                .concat(covidAnnotations);
+
+            // Create annotation function
+            const makeAnnotations = d3.annotation()
+                .type(d => d.subject ? d3.annotationCalloutCircle : d3.annotationCalloutElbow) // Choose type based on presence of subject
+                .annotations(allAnnotations);
+
+            // Append annotations to the SVG
             svg.append("g")
                 .attr("class", "annotation-group")
                 .call(makeAnnotations);
