@@ -85,7 +85,7 @@
                 .attr("fill", "none")
                 .attr("d", line)
                 .on("mouseover", function(event) {
-                    d3.select(this).attr("stroke", "red"); // Change line color on mouseover
+                    d3.select(this).style("stroke", "red"); // Change line color on mouseover
                     tooltip.transition().duration(200).style("opacity", .9);
                     tooltip.html('Total Points Scored in a Season')
                         .style("left", (event.pageX + 5) + "px")
