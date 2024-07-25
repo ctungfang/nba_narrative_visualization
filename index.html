@@ -20,6 +20,11 @@
             stroke: lightgray;
             stroke-width: 2;
         }
+        .threeAttemptLine {
+            fill: none;
+            stroke: rgb(186, 10, 10);
+            stroke-width: 4;
+        }
         .buffer-line {
             fill: none;
             stroke: transparent;
@@ -96,10 +101,10 @@
                 .x(d => x(new Date(d.season)))
                 .y(d => y(d['3pa']));
 
-            // Append Pts line and mouseover tooltip
+            // Append 3Pa line and mouseover tooltip
             svg.append("path")
                 .datum(aggregatedData)
-                .attr("stroke-width", 4)
+                .attr("class", "threeAttemptLine")
                 .attr("d", threeAttemptLine)
                 .on("mouseover", function(event) {
                     d3.select(this).style("stroke", "green"); // Change line color on mouseover
