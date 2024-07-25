@@ -165,6 +165,7 @@
             d3.select("body").on("click", function() {
                 if (activeLine) {
                     d3.select(activeLine).style("stroke", "lightgray");
+                    d3.select(this).style("stroke-width", "2");
                     activeLine = null;
                 }
             }); 
