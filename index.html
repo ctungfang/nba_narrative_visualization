@@ -78,7 +78,7 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
-            const lineGenerator = function(data, yAccessor) {
+            const lineGenerator = function(yAccessor) {
                 return d3.line()
                     .x(d => x(new Date(d.season)))
                     .y(yAccessor);
@@ -88,7 +88,7 @@
                 const line = svg.append("path")
                     .datum(data)
                     .attr("class", "line")
-                    .attr("d", lineGenerator(data, yAccessor))
+                    .attr("d", lineGenerator(yAccessor))
                     .on("mouseover", function(event) {
                         d3.select(this).style("stroke", "green");
                         tooltip.transition().duration(200).style("opacity", 0.9);
@@ -109,15 +109,15 @@
                 svg.append("path")
                     .datum(data)
                     .attr("class", "buffer-line")
-                    .attr("d", lineGenerator(data, yAccessor))
+                    .attr("d", lineGenerator(yAccessor))
                     .on("mouseover", function(event) {
-                        line.dispatch("mouseover", { detail: data, bubbles: true });
+                        line.dispatch("mouseover", { bubbles: true });
                     })
                     .on("mousemove", function(event) {
-                        line.dispatch("mousemove", { detail: data, bubbles: true });
+                        line.dispatch("mousemove", { bubbles: true });
                     })
                     .on("mouseout", function(event) {
-                        line.dispatch("mouseout", { detail: data, bubbles: true });
+                        line.dispatch("mouseout", { bubbles: true });
                     });
             };
 
