@@ -36,9 +36,20 @@
             // Parse and aggregate data
             let aggregatedData = d3.rollup(data, v => ({
                 Pts: d3.sum(v, d => +d.Pts),
+                '3p%': d3.sum(v, d => +d['3p%']),
                 '3pa': d3.sum(v, d => +d['3pa']),
                 '3pm': d3.sum(v, d => +d['3pm']),
-                Age: d3.mean(v, d => +d.Age)
+                Ast: d3.sum(v, d => +d.Ast),
+                Blk: d3.sum(v, d => +d.Blk),
+                'Fg%': d3.sum(v, d => +d['Fg%']),
+                'Fga': d3.sum(v, d => +d['Fga']),
+                'Fgm': d3.sum(v, d => +d['Fgm']),
+                'Ft%': d3.sum(v, d => +d['Ft%']),
+                'Fta': d3.sum(v, d => +d['Fta']),
+                'Ftm': d3.sum(v, d => +d['Ftm']),
+                'Reb': d3.sum(v, d => +d['Reb']),
+                'Stl': d3.sum(v, d => +d['Stl']),
+                'Tov': d3.sum(v, d => +d['Tov']),
             }), d => d.Season);
 
             aggregatedData = Array.from(aggregatedData, ([season, stats]) => ({ season, ...stats }));
@@ -78,57 +89,57 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
-            // Pts Line generator
-            const Ptsline = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d.Pts));
+            // // Pts Line generator
+            // const Ptsline = d3.line()
+            //     .x(d => x(new Date(d.season)))
+            //     .y(d => y(d.Pts));
 
-            // Append Pts line and mouseover tooltip
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("class", "line")
-                .attr("d", Ptsline)
-                .on("mouseover", function(event) {
-                    d3.select(this).style("stroke", "green"); // Change line color on mouseover
-                    tooltip.transition().duration(200).style("opacity", .9);
-                    tooltip.html('Total Points Scored in a Season')
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mousemove", function(event) {
-                    tooltip.style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function() {
-                    d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
-                    tooltip.transition().duration(500).style("opacity", 0);
-                });
+            // // Append Pts line and mouseover tooltip
+            // svg.append("path")
+            //     .datum(aggregatedData)
+            //     .attr("class", "line")
+            //     .attr("d", Ptsline)
+            //     .on("mouseover", function(event) {
+            //         d3.select(this).style("stroke", "green"); // Change line color on mouseover
+            //         tooltip.transition().duration(200).style("opacity", .9);
+            //         tooltip.html('Total Points Scored in a Season')
+            //             .style("left", (event.pageX + 5) + "px")
+            //             .style("top", (event.pageY - 28) + "px");
+            //     })
+            //     .on("mousemove", function(event) {
+            //         tooltip.style("left", (event.pageX + 5) + "px")
+            //             .style("top", (event.pageY - 28) + "px");
+            //     })
+            //     .on("mouseout", function() {
+            //         d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
+            //         tooltip.transition().duration(500).style("opacity", 0);
+            //     });
 
-            // 3pa Line generator
-            const threeAttemptLine = d3.line()
-                .x(d => x(new Date(d.season)))
-                .y(d => y(d['3pa']));
+            // // 3pa Line generator
+            // const threeAttemptLine = d3.line()
+            //     .x(d => x(new Date(d.season)))
+            //     .y(d => y(d['3pa']));
 
-            // Append Pts line and mouseover tooltip
-            svg.append("path")
-                .datum(aggregatedData)
-                .attr("class", "line")
-                .attr("d", threeAttemptLine)
-                .on("mouseover", function(event) {
-                    d3.select(this).style("stroke", "green"); // Change line color on mouseover
-                    tooltip.transition().duration(200).style("opacity", .9);
-                    tooltip.html('3PA in a Season')
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mousemove", function(event) {
-                    tooltip.style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function() {
-                    d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
-                    tooltip.transition().duration(500).style("opacity", 0);
-                });
+            // // Append Pts line and mouseover tooltip
+            // svg.append("path")
+            //     .datum(aggregatedData)
+            //     .attr("class", "line")
+            //     .attr("d", threeAttemptLine)
+            //     .on("mouseover", function(event) {
+            //         d3.select(this).style("stroke", "green"); // Change line color on mouseover
+            //         tooltip.transition().duration(200).style("opacity", .9);
+            //         tooltip.html('3PA in a Season')
+            //             .style("left", (event.pageX + 5) + "px")
+            //             .style("top", (event.pageY - 28) + "px");
+            //     })
+            //     .on("mousemove", function(event) {
+            //         tooltip.style("left", (event.pageX + 5) + "px")
+            //             .style("top", (event.pageY - 28) + "px");
+            //     })
+            //     .on("mouseout", function() {
+            //         d3.select(this).style("stroke", "lightgray"); // Revert line color on mouseout
+            //         tooltip.transition().duration(500).style("opacity", 0);
+            //     });
 
             // // 3pm Line generator
             // const threeMakeLine = d3.line()
@@ -201,7 +212,23 @@
             };
 
             // Create lines
+            createLine(aggregatedData, d => y(d.Pts), "Total Points Scored in a Season");
+            createLine(aggregatedData, d => y(d['3p%']), "3P% in a Season");
+            createLine(aggregatedData, d => y(d['3pa']), "3PA in a Season");
             createLine(aggregatedData, d => y(d['3pm']), "3PM in a Season");
+            createLine(aggregatedData, d => y(d['Ast']), "Ast in a Season");
+            createLine(aggregatedData, d => y(d['Blk']), "Blk in a Season");
+            createLine(aggregatedData, d => y(d['Fg%']), "FG% in a Season");
+            createLine(aggregatedData, d => y(d['Fga']), "FGA in a Season");
+            createLine(aggregatedData, d => y(d['Fgm']), "FGM in a Season");
+            createLine(aggregatedData, d => y(d['Ft%']), "Ft% in a Season");
+            createLine(aggregatedData, d => y(d['Fta']), "Fta in a Season");
+            createLine(aggregatedData, d => y(d['Ftm']), "Ftm in a Season");
+            createLine(aggregatedData, d => y(d['Reb']), "Reb in a Season");
+            createLine(aggregatedData, d => y(d['Stl']), "Stl in a Season");
+            createLine(aggregatedData, d => y(d['Tov']), "Tov in a Season");
+
+            
         });
     </script>
 </body>
